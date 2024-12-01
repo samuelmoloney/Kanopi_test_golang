@@ -17,9 +17,17 @@ class Swatch extends React.Component<SwatchProps> {
             height: "100px",
             margin: "5px",
         };
+        const containerStyle = {
+            display: "flex",
+            flexDirection: "column" as const,
+            justifyContent: "center",
+            alignItems: "center",
+     
+            margin: "10px",
+        };
 
         return (
-            <div style={{ textAlign: "center", margin: "10px" }}>
+            <div style={containerStyle}>
                 {/* Swatch */}
                 <div style={style}></div>
 

@@ -25,7 +25,6 @@ export const getHealthCheck = async (echo: string): Promise<{ message: string }>
 export const getRandomColors = async (count: number): Promise< Color[]> => {
     try {
         const response = await apiClient.get(`/swatches/get-multiple-random-colors/${count}`);
-       // console.log(response.data.colors);
         // Extract the colors from the response data
         const cstr = response.data.colors;
         const colors: Color[] = typeof cstr === "string" ? JSON.parse(cstr) : cstr;
@@ -34,7 +33,7 @@ export const getRandomColors = async (count: number): Promise< Color[]> => {
         return colors;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error : any) {
-        console.error('Error fetching random colors:', error.response?.data || error.message);
+        console.error('Error fetching colors:', error.response?.data || error.message);
         throw error;
     }
 }

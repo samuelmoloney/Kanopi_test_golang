@@ -39,13 +39,12 @@ function App() {
 
     return (
         <div className="App">
-            <h1>React App</h1>
             <button onClick={handleHealthCheck}>Check Health</button>
             {message && <p style={{ color: 'green' }}>{message}</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <h1>Random Colors</h1>
-            <button onClick={handleRandomColors}>Get Random Colors</button>
-            <input type="number" placeholder="Amount of Colors" onChange={handleCountChange } />
+            <h1>Swatches</h1>
+            <button onClick={handleRandomColors}>Get Swatches Colors</button>
+            <input type="number" placeholder="Amount of Swatchs" onChange={handleCountChange } />
             {colors && <p>{colors.length} colors</p>}
             {colors && colors.length > 0 ? (
                 <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
