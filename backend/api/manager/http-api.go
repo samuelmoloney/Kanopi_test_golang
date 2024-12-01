@@ -3,6 +3,7 @@ package manager
 import (
 	"backend/api"
 	healthcheck "backend/api/endpoints/health-check"
+	"backend/api/endpoints/swatches"
 	"fmt"
 	"net/http"
 
@@ -29,6 +30,7 @@ func NewBackendAPI(host string, port string) *BackendAPI {
 
 	// Register endpoints
 	huma.Register(instance, healthcheck.HealthCheckOperation, healthcheck.HealthCheckEcho)
+	huma.Register(instance, swatches.SwatchesOperation, swatches.GetRandomColor)
 
 	return &BackendAPI{
 		HttpClient: resty.New(),
