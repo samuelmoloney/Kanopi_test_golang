@@ -35,7 +35,6 @@ const BRGBtoRGBstring = (color: BRGBColor): string => {
     const green = scaleToRgb(color.green, color.brightness);
     const blue = scaleToRgb(color.blue, color.brightness);
 
-    console.log(`BRGBtoRGBstring: ${red}, ${green}, ${blue}`);
     return`rgb(${red}, ${green}, ${blue})`;
 }
 
