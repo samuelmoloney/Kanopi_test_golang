@@ -41,8 +41,9 @@ func HSLColor(H float32, S float32, L float32) *Color {
 	return &Color{Type: "hsl", Hue: &H, Saturation: &S, Lightness: &L}
 }
 
-var SwatchesOperation = huma.Operation{
-	OperationID: "swatches",
+// ////// Get a single random color
+var SwatchesGetColorOperation = huma.Operation{
+	OperationID: "swatches-get-random-color",
 	Method:      http.MethodGet,
 	Path:        "/swatches/get-random-color/{colorType}",
 	Summary:     "",
@@ -68,5 +69,41 @@ func GetRandomColor(ctx context.Context, input *ColorRequest) (*ColorResponse, e
 	resp := &ColorResponse{}
 	resp.Body.Color = *color
 	logrus.Info("Generated color: ", resp.Body.Color)
+	return resp, nil
+}
+
+//////// Get multiple random colors
+
+var SwatchesGetMultipleColorsOperation = huma.Operation{
+	OperationID: "swatches-get-multiple-random-colors",
+	Method:      http.MethodGet,
+	Path:        "/swatches/get-multiple-random-colors/{amount}",
+	Summary:     "",
+	Description: "",
+}
+
+type MultipleColorsRequest struct {
+	Amount int `path:"amount" doc:"The number of colors to generate"`
+}
+type MultipleColorsResponse struct {
+	Body struct {
+		Colors []Color `json:"colors" doc:"returns a list of color objects"`
+	}
+}
+
+func GetMultipleRandomColors(ctx context.Context, input *MultipleColorsRequest) (*MultipleColorsResponse, error) {
+
+	var colors []Color
+	for i := 0; i < input.Amount; i++ {
+		colorType := []string{"rgb", "hsl"}[rand.Intn(2)]
+		color, err := generateRandomColor(colorType)
+		if err != nil {
+			return nil, err
+		}
+		colors = append(colors, *color)
+	}
+	resp := &MultipleColorsResponse{}
+	resp.Body.Colors = colors
+	logrus.Info("Generated colors: ", resp.Body.Colors)
 	return resp, nil
 }

@@ -30,7 +30,8 @@ func NewBackendAPI(host string, port string) *BackendAPI {
 
 	// Register endpoints
 	huma.Register(instance, healthcheck.HealthCheckOperation, healthcheck.HealthCheckEcho)
-	huma.Register(instance, swatches.SwatchesOperation, swatches.GetRandomColor)
+	huma.Register(instance, swatches.SwatchesGetColorOperation, swatches.GetRandomColor)
+	huma.Register(instance, swatches.SwatchesGetMultipleColorsOperation, swatches.GetMultipleRandomColors)
 
 	return &BackendAPI{
 		HttpClient: resty.New(),
