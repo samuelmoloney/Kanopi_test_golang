@@ -35,9 +35,11 @@ const (
 var colorTypes = []string{ColorTypeRGB, ColorTypeHSL, ColorTypeBRGB}
 
 var randomColorGenerators = map[string]func() *Color{
-	ColorTypeRGB:  func() *Color { return RGBColor(rand.Intn(256), rand.Intn(256), rand.Intn(256)) },
-	ColorTypeHSL:  func() *Color { return HSLColor(rand.Float32()*360, rand.Float32()*100, rand.Float32()*100) },
-	ColorTypeBRGB: func() *Color { return BRGBColor(rand.Intn(1000), rand.Intn(1000), rand.Intn(1000), rand.Intn(1000)) },
+	ColorTypeRGB: func() *Color { return RGBColor(rand.Intn(256), rand.Intn(256), rand.Intn(256)) },
+	ColorTypeHSL: func() *Color { return HSLColor(rand.Float32()*360, rand.Float32()*100, rand.Float32()*100) },
+	ColorTypeBRGB: func() *Color {
+		return BRGBColor(rand.Intn(10000), rand.Intn(10000), rand.Intn(10000), rand.Intn(10000))
+	},
 }
 
 func generateRandomColor(colorType string) (*Color, error) {
