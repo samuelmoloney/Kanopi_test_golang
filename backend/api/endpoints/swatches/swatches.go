@@ -20,17 +20,31 @@ type Color struct {
 	Hue        *float32 `json:"hue,omitempty"`
 	Saturation *float32 `json:"saturation,omitempty"`
 	Lightness  *float32 `json:"lightness,omitempty"`
+	// BRGB color fields
+	Brightness *int `json:"brightness,omitempty"`
+}
+
+// this is the different color types we can generate
+// because go doesn't have enums, we use a map to store the different color types and a array of values to iterate over
+const (
+	ColorTypeRGB  = "rgb"
+	ColorTypeHSL  = "hsl"
+	ColorTypeBRGB = "brgb"
+)
+
+var colorTypes = []string{ColorTypeRGB, ColorTypeHSL, ColorTypeBRGB}
+
+var randomColorGenerators = map[string]func() *Color{
+	ColorTypeRGB:  func() *Color { return RGBColor(rand.Intn(256), rand.Intn(256), rand.Intn(256)) },
+	ColorTypeHSL:  func() *Color { return HSLColor(rand.Float32()*360, rand.Float32()*100, rand.Float32()*100) },
+	ColorTypeBRGB: func() *Color { return BRGBColor(rand.Intn(1000), rand.Intn(1000), rand.Intn(1000), rand.Intn(1000)) },
 }
 
 func generateRandomColor(colorType string) (*Color, error) {
-	switch colorType {
-	case "rgb":
-		return RGBColor(rand.Intn(256), rand.Intn(256), rand.Intn(256)), nil
-	case "hsl":
-		return HSLColor(rand.Float32()*360, rand.Float32()*100, rand.Float32()*100), nil
-	default:
-		return &Color{}, huma.NewError(http.StatusBadRequest, "Invalid color type")
+	if generator, exists := randomColorGenerators[colorType]; exists {
+		return generator(), nil
 	}
+	return nil, huma.NewError(http.StatusBadRequest, "Invalid color type")
 }
 
 func RGBColor(R int, G int, B int) *Color {
@@ -39,6 +53,10 @@ func RGBColor(R int, G int, B int) *Color {
 
 func HSLColor(H float32, S float32, L float32) *Color {
 	return &Color{Type: "hsl", Hue: &H, Saturation: &S, Lightness: &L}
+}
+
+func BRGBColor(B int, R int, G int, B2 int) *Color {
+	return &Color{Type: "brgb", Brightness: &B, Red: &R, Green: &G, Blue: &B2}
 }
 
 // ////// Get a single random color
@@ -51,7 +69,7 @@ var SwatchesGetColorOperation = huma.Operation{
 }
 
 type ColorRequest struct {
-	ColorType string `path:"colorType" doc:" 'rgb' or 'hsl'" `
+	ColorType string `path:"colorType" doc:"The type of color to generate (rgb, hsl, brgb)"`
 }
 
 type ColorResponse struct {
@@ -95,7 +113,7 @@ func GetMultipleRandomColors(ctx context.Context, input *MultipleColorsRequest) 
 
 	var colors []Color
 	for i := 0; i < input.Amount; i++ {
-		colorType := []string{"rgb", "hsl"}[rand.Intn(2)]
+		colorType := colorTypes[rand.Intn(len(colorTypes))]
 		color, err := generateRandomColor(colorType)
 		if err != nil {
 			return nil, err
@@ -105,5 +123,6 @@ func GetMultipleRandomColors(ctx context.Context, input *MultipleColorsRequest) 
 	resp := &MultipleColorsResponse{}
 	resp.Body.Colors = colors
 	logrus.Info("Generated colors: ", resp.Body.Colors)
+
 	return resp, nil
 }

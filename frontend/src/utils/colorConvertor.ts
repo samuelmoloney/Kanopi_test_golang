@@ -8,7 +8,7 @@ export const convertToCSSColor = (color: Color): string => {
         // Convert HSL color to CSS `hsl()` format
         return `hsl(${color.hue}, ${color.saturation}%, ${color.lightness}%)`;
     } else {
-        throw new Error(`Unknown color type: ${color.type}`);
+        throw new Error(`Unknown color type`);
     }
 };
 
@@ -17,7 +17,6 @@ export const coverntColorToText = (color: Color): string => {
         return `RGB: ${color.red}, ${color.green}, ${color.blue}`;
     } else if (color.type === "hsl") {
         return `HSL: ${color.hue.toFixed(0)}, ${color.saturation.toFixed(0)}%, ${color.lightness.toFixed(0)}%`;
-    } else {
-        throw new Error(`Unknown color type: ${color.type}`);
     }
+    throw new Error(`Unknown color type`);
 };
